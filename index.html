@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB账号商城 - 全球Facebook账号供应</title>
+<style>
+:root{--bg:#0a0a1a;--card-bg:#12122a;--pink:#ff6b9d;--purple:#c44dff;--cyan:#00e5ff;--gold:#ffd700;--text:#e8e8f0;--sub:#8888aa;--green:#66bb6a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;overflow-x:hidden;line-height:1.6}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--dur) ease-in-out infinite;animation-delay:var(--delay);opacity:0}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.3;animation:floatOrb 8s ease-in-out infinite alternate}
+.orb1{width:500px;height:500px;background:#ff6b9d;top:-200px;left:-100px}
+.orb2{width:400px;height:400px;background:#c44dff;bottom:-150px;right:-80px;animation-delay:-3s}
+.orb3{width:350px;height:350px;background:#00e5ff;top:40%;left:50%;animation-delay:-5s}
+@keyframes floatOrb{0%{transform:translate(0,0)scale(1)}100%{transform:translate(80px,-60px)scale(1.2)}}
+.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:20px}
+.hero{text-align:center;padding:60px 20px 40px}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,rgba(255,107,157,.2),rgba(196,77,255,.2));border:1px solid rgba(255,107,157,.3);border-radius:50px;padding:6px 20px;font-size:13px;color:#ff6b9d;letter-spacing:2px;margin-bottom:20px;animation:pulseBadge 2s ease-in-out infinite}
+@keyframes pulseBadge{0%,100%{box-shadow:0 0 0 0 rgba(255,107,157,.4)}50%{box-shadow:0 0 0 16px rgba(255,107,157,0)}}
+.hero h1{font-size:clamp(36px,6vw,64px);font-weight:900;background:linear-gradient(135deg,#ff6b9d,#c44dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:10px}
+.hero .subtitle{font-size:18px;color:var(--sub);letter-spacing:1px}
+.mascot-wrap{display:flex;justify-content:center;align-items:center;margin:10px 0 30px}
+.mascot{position:relative;width:180px;height:180px;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.mascot svg{width:100%;height:100%}
+.sb{position:absolute;top:-50px;right:-70px;background:linear-gradient(135deg,#ff6b9d,#c44dff);color:white;padding:10px 16px;border-radius:20px 20px 4px 20px;font-size:13px;font-weight:700;white-space:nowrap;animation:popIn .6s ease-out .5s both,fb2 3s ease-in-out 1.1s infinite;box-shadow:0 8px 30px rgba(255,107,157,.4)}
+.sb::after{content:'';position:absolute;bottom:-8px;left:20px;width:16px;height:16px;background:#c44dff;clip-path:polygon(0 0,100% 0,0 100%)}
+@keyframes popIn{0%{transform:scale(0);opacity:0}80%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes fb2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.stats-bar{display:flex;justify-content:center;gap:50px;flex-wrap:wrap;margin-bottom:50px}
+.sti{text-align:center}.stn{font-size:32px;font-weight:900;background:linear-gradient(135deg,#ffd700,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.stl{font-size:13px;color:var(--sub);margin-top:4px}
+.st{text-align:center;margin-bottom:30px}.st .ic{font-size:40px;margin-bottom:8px}.st h2{font-size:28px;font-weight:800}.st .ln{width:60px;height:4px;border-radius:2px;margin:10px auto 0}
+.lp{background:linear-gradient(90deg,#ff6b9d,#ff3d6f)}.lv{background:linear-gradient(90deg,#c44dff,#7b2ff7)}.lc{background:linear-gradient(90deg,#00e5ff,#0091ea)}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px;margin-bottom:50px}
+.cd{background:var(--card-bg);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:28px 24px;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:default}
+.cd:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.15);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 40px var(--glow)}
+.cd::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);border-radius:3px 3px 0 0}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.cn{font-size:18px;font-weight:800}
+.ct{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
+.cds{color:var(--sub);font-size:13px;margin-bottom:16px;line-height:1.7}
+.cf{background:rgba(255,255,255,.03);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.cf .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--sub);margin-bottom:4px}
+.cf .cod{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:14px;color:#00e5ff;word-break:break-all}
+.cp{font-size:36px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cp .u{font-size:16px;font-weight:600}
+.cw{font-size:12px;color:#66bb6a;margin-top:8px;display:flex;align-items:center;gap:6px}
+.ctg{margin-top:6px}.ctg span{background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:10px;font-size:11px;margin-right:4px}
+.cd-out{opacity:.5}.cd-out .btn-buy{display:none!important}
+.btn-buy{display:inline-block;width:100%;margin-top:14px;padding:12px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;text-align:center;color:white;background:linear-gradient(135deg,#ff6b9d,#c44dff);box-shadow:0 4px 20px rgba(255,107,157,.3)}
+.btn-buy:hover{transform:scale(1.03);box-shadow:0 6px 30px rgba(255,107,157,.5)}
+.mo{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);z-index:100;justify-content:center;align-items:center}
+.mo.ac{display:flex}
+.md{background:var(--card-bg);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:32px;width:90%;max-width:480px;max-height:90vh;overflow-y:auto;text-align:center;animation:mi .3s ease-out}
+@keyframes mi{from{opacity:0;transform:translateY(20px)scale(.95)}to{opacity:1;transform:translateY(0)scale(1)}}
+.md h3{font-size:24px;margin-bottom:6px}.md .in{color:var(--sub);font-size:14px;margin-bottom:20px}
+.ab{background:rgba(0,229,255,.08);border:2px dashed rgba(0,229,255,.3);border-radius:16px;padding:20px;margin-bottom:16px}
+.ab .al{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.ab .av{font-size:40px;font-weight:900;color:var(--cyan)}.ab .acn{font-size:14px;color:var(--sub);margin-top:4px}
+.adb{background:rgba(255,255,255,.03);border-radius:12px;padding:16px;margin-bottom:20px}
+.adb .adl{font-size:12px;color:var(--sub);letter-spacing:1px;margin-bottom:6px}
+.adb .adv{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:14px;word-break:break-all;background:rgba(255,215,0,.1);padding:8px 12px;border-radius:8px;color:var(--gold);cursor:pointer}
+.adb .adv:hover{background:rgba(255,215,0,.2)}
+.adb .nw{font-size:12px;color:var(--sub);margin-top:6px}
+.sb2{margin-top:16px;padding:16px;border-radius:12px;background:rgba(255,215,64,.08);color:#ffd740;font-weight:600;font-size:15px}
+.sb2.pd{background:rgba(102,187,106,.12);color:var(--green)}
+.accb{background:rgba(102,187,106,.08);border:1px solid rgba(102,187,106,.3);border-radius:16px;padding:20px;margin-top:16px;animation:mi .5s ease-out}
+.accb .at{font-size:18px;font-weight:800;color:var(--green);margin-bottom:10px}
+.accb .ad2{font-size:14px;color:var(--text);line-height:1.8}
+.accb .ad2 code{background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px;font-size:14px}
+.sp{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.2);border-top-color:#ffd740;border-radius:50%;animation:spn 1s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spn{to{transform:rotate(360deg)}}
+.bc{display:inline-block;margin-top:16px;padding:10px 30px;background:rgba(255,255,255,.1);border:none;border-radius:10px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer}
+.bc:hover{background:rgba(255,255,255,.2)}
+.cs{background:var(--card-bg);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:40px 30px;text-align:center;margin-bottom:50px;position:relative;overflow:hidden}
+.cs::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#ff6b9d,#c44dff,#00e5ff,#ff6b9d);background-size:200% 100%;animation:sL 3s linear infinite}
+@keyframes sL{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.cs h2{font-size:26px;margin-bottom:8px}.cs .sb3{color:var(--sub);font-size:14px;margin-bottom:30px}
+.ccs{display:flex;justify-content:center;gap:30px;flex-wrap:wrap}
+.cc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px 36px;min-width:240px;transition:all .3s;cursor:pointer;text-decoration:none;color:inherit}
+.cc:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.cc.tg:hover{border-color:#00aaff;box-shadow:0 12px 40px rgba(0,170,255,.2)}
+.cc.wx:hover{border-color:#66bb6a;box-shadow:0 12px 40px rgba(102,187,106,.2)}
+.cci{font-size:48px;margin-bottom:10px}.ccl{font-size:13px;color:var(--sub);text-transform:uppercase;letter-spacing:2px}.ccid{font-size:20px;font-weight:800;margin-top:4px}
+.cc.tg .ccid{color:#00aaff}.cc.wx .ccid{color:#66bb6a}
+.ft{text-align:center;padding:30px;color:var(--sub);font-size:12px;border-top:1px solid rgba(255,255,255,.04)}
+.ft .er{font-size:24px;letter-spacing:8px;margin-bottom:10px}
+@media(max-width:700px){.hero{padding:40px 16px 20px}.stats-bar{gap:30px}.cg{grid-template-columns:1fr}.ccs{flex-direction:column;align-items:center}.sb{right:-30px;top:-40px;font-size:11px;padding:8px 12px}.mascot{width:140px;height:140px}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="container">
+<header class="hero">
+<div class="hero-badge">🔥 FB ACCOUNT STORE</div>
+<h1>Facebook 账号商城</h1>
+<p class="subtitle">稳定 · 可靠 · 售后无忧</p>
+<div class="mascot-wrap"><div class="mascot">
+<div class="sb">你好！选号吗~ 😊</div>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6c5ce7"/><stop offset="100%" stop-color="#4834d4"/></linearGradient><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffeaa7"/><stop offset="100%" stop-color="#fdcb6e"/></linearGradient></defs><ellipse cx="55" cy="65" rx="20" ry="28" fill="#6c5ce7"/><ellipse cx="145" cy="65" rx="20" ry="28" fill="#6c5ce7"/><ellipse cx="55" cy="65" rx="12" ry="18" fill="#a29bfe"/><ellipse cx="145" cy="65" rx="12" ry="18" fill="#a29bfe"/><ellipse cx="100" cy="140" rx="55" ry="45" fill="url(#bg1)"/><ellipse cx="100" cy="90" rx="42" ry="38" fill="url(#bg2)"/><circle cx="82" cy="82" r="7" fill="#2d3436"/><circle cx="118" cy="82" r="7" fill="#2d3436"/><circle cx="84" cy="79" r="2.5" fill="white"/><circle cx="120" cy="79" r="2.5" fill="white"/><ellipse cx="100" cy="92" rx="5" ry="3.5" fill="#e17055"/><path d="M 88 100 Q 100 114 112 100" stroke="#e17055" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="68" cy="95" rx="8" ry="5" fill="rgba(255,107,157,.3)"/><ellipse cx="132" cy="95" rx="8" ry="5" fill="rgba(255,107,157,.3)"/><rect x="93" y="15" width="14" height="22" rx="7" fill="#ff6b9d"/><circle cx="100" cy="12" r="10" fill="#ff6b9d"/><circle cx="100" cy="12" r="5" fill="#ff9ec4"/><rect x="145" y="50" width="50" height="30" rx="8" fill="#1877f2"/><text x="170" y="70" text-anchor="middle" font-size="16" font-weight="900" fill="white" font-family="Arial">f</text></svg>
+</div></div>
+<div class="stats-bar">
+<div class="sti"><div class="stn" id="countSold">5678+</div><div class="stl">已售账号</div></div>
+<div class="sti"><div class="stn">99%</div><div class="stl">客户好评</div></div>
+<div class="sti"><div class="stn">7×24</div><div class="stl">在线服务</div></div>
+</div></header>
+<div id="products-area"></div>
+<section class="cs">
+<h2>📲 立即联系购买</h2>
+<p class="sb3">支持下单后快速交付，在线秒回</p>
+<div class="ccs">
+<a class="cc tg" href="https://t.me/FB520529" target="_blank"><div class="cci"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="27" fill="#00aaff"/><path d="M12.5 27.5L24 32l4 12 6-18 8-16-24 14 8 3z" fill="white" opacity=".9"/></svg></div><div class="ccl">Telegram</div><div class="ccid">@FB520529</div></a>
+<a class="cc wx" href="weixin://dl/chat?FB5205209" target="_blank"><div class="cci"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="27" fill="#66bb6a"/><path d="M20 18c-4.4 0-8 3.3-8 7.3 0 2.4 1.3 4.6 3.3 5.8l-.8 2.7 3-1.5c.8.2 1.6.3 2.5.3.5 0 1 0 1.5-.1-.1-.5-.2-1-.2-1.5 0-3.8 3.3-6.8 7.5-6.8.4 0 .7 0 1.1.1C29.2 20.8 25 18 20 18z" fill="white"/><path d="M36 28.5c0-3.5-3.1-6.4-7-6.4s-7 2.9-7 6.4 3.1 6.4 7 6.4c.8 0 1.6-.1 2.4-.4l2.6 1.3-.7-2.5c1.5-1.2 2.7-2.9 2.7-4.8z" fill="white" opacity=".9"/></svg></div><div class="ccl">微信</div><div class="ccid">FB5205209</div></a>
+</div></section>
+<footer class="ft"><div class="er">🌟 🔥 💎 🚀 ⚡</div><p>FB 账号商城 © 2026 · 诚信经营 · 售后无忧</p></footer>
+</div>
+
+<div class="mo" id="buyModal">
+<div class="md">
+<h3>💳 USDT 付款</h3>
+<div class="in" id="modalItemName"></div>
+<div class="ab"><div class="al">请支付</div><div class="av" id="modalAmount">0</div><div class="al">USDT</div><div class="acn" id="modalCNY"></div></div>
+<div class="adb"><div class="adl">TRC20 收款地址 (点击复制)</div><div class="adv" id="modalAddr" onclick="copyAddr()"></div><div class="nw">🌐 TRON 网络 (TRC20)</div></div>
+<div class="sb2" id="modalStatus"><span class="sp"></span> 等待付款中...</div>
+<div id="modalAccount" style="display:none"></div>
+<button class="bc" onclick="closeBuyModal()">关闭</button>
+</div></div>
+
+<script>
+(function(){var s=document.getElementById("stars"),c=80,h="";for(var i=0;i<c;i++){var z=Math.random()*3+1,x=Math.random()*100,y=Math.random()*100,d=Math.random()*3+2,dl=Math.random()*5;h+='<div class="star" style="width:'+z+'px;height:'+z+'px;top:'+y+'%;left:'+x+'%;--dur:'+d+'s;--delay:'+dl+'s;"></div>'}s.innerHTML=h})();
+
+// EMBEDDED DATA
+var INVENTORY = [{"id":"1","category":"个号","name":"带身份证 · 普通三解","price":70,"format":"6155 - 6156 - 6157","desc":"带身份证信息，普通三解账号","warranty":"包售后7天内一次","tags":["热卖"],"stock":15,"sold":767},{"id":"2","category":"个号","name":"带身份证 · 抵抗三解","price":180,"format":"10001 - 10009（国家随机）","desc":"带身份证信息，抵抗三解高防账号","warranty":"包售后7天内一次","tags":["推荐"],"stock":8,"sold":409},{"id":"3","category":"粉丝页","name":"老主页","price":40,"format":"经典老主页","desc":"包接入活。修改资料造成的死亡则不做售后","warranty":"包接入活","tags":["实惠"],"stock":20,"sold":1023},{"id":"4","category":"粉丝页","name":"千粉主页","price":80,"format":"1000+ 真实粉丝","desc":"拥有 1000+ 粉丝的粉丝页，包接入活","warranty":"包接入活","tags":["热门"],"stock":12,"sold":613},{"id":"5","category":"粉丝页","name":"万粉主页","price":240,"format":"10,000+ 真实粉丝","desc":"拥有 10000+ 粉丝的高权重粉丝页","warranty":"包接入活","tags":["旗舰"],"stock":5,"sold":255},{"id":"6","category":"BM","name":"老 BM","price":30,"format":"稳定老号","desc":"经典老BM号，稳定可靠","warranty":"稳定可靠","tags":["入门"],"stock":25,"sold":1278},{"id":"7","category":"BM","name":"分享像素 BM","price":80,"format":"支持像素分享","desc":"支持分享像素的BM号，适合广告投放","warranty":"功能齐全","tags":["实用"],"stock":10,"sold":511},{"id":"8","category":"BM","name":"50 主页 BM","price":80,"format":"支持50主页管理","desc":"可管理50个主页的BM号","warranty":"容量充足","tags":["进阶"],"stock":10,"sold":511},{"id":"9","category":"BM","name":"100 主页 BM","price":140,"format":"支持100主页管理","desc":"可管理100个主页的BM号","warranty":"大容量旗舰","tags":["旗舰"],"stock":6,"sold":311}];
+var CONFIG = {"usdtAddress":"TGoptTMytquxHW5gYsQgKxb1q6Ch2P7Z1r","usdtRate":6.78,"minConfirmations":1};
+
+var pollTimer=null;
+
+var catCfg={"个号":{ic:"👤",ln:"lp",tb:"rgba(255,107,157,.2)",tc:"#ff6b9d",grad:"linear-gradient(90deg,#ff6b9d,#ff3d6f)",glow:"rgba(255,107,157,.25)"},"粉丝页":{ic:"📄",ln:"lv",tb:"rgba(162,155,254,.2)",tc:"#a29bfe",grad:"linear-gradient(90deg,#a29bfe,#6c5ce7)",glow:"rgba(108,92,231,.25)"},"BM":{ic:"🏢",ln:"lc",tb:"rgba(0,229,255,.2)",tc:"#00e5ff",grad:"linear-gradient(90deg,#00e5ff,#00b8d4)",glow:"rgba(0,229,255,.2)"}};
+
+function render(){
+  var g={},o=["个号","粉丝页","BM"];
+  INVENTORY.forEach(function(i){if(!g[i.category])g[i.category]=[];g[i.category].push(i)});
+  var ks=Object.keys(g).sort(function(a,b){return o.indexOf(a)-o.indexOf(b)});
+  var h="";
+  ks.forEach(function(cat){
+    var cf=catCfg[cat]||catCfg["个号"];
+    h+='<div class="st"><div class="ic">'+cf.ic+'</div><h2>Facebook '+cat+'</h2><div class="ln '+cf.ln+'"></div></div><div class="cg">';
+    g[cat].forEach(function(item){
+      var gd=cf.grad;if(item.tags&&(item.tags.indexOf("推荐")>=0||item.tags.indexOf("旗舰")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
+      var so=item.stock<=0,up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
+      var tg="";if(item.tags&&item.tags.length)tg='<div class="ctg">'+item.tags.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>';
+      h+='<div class="cd'+(so?' cd-out':'')+'" style="--grad:'+gd+';--glow:'+cf.glow+'">';
+      h+='<div class="ch"><div class="cn">'+item.name+'</div>';
+      if(item.tags&&item.tags.length)h+='<span class="ct" style="background:'+cf.tb+';color:'+cf.tc+';">'+item.tags[0]+'</span>';
+      h+='</div><div class="cds">'+item.desc+'。'+item.warranty+'。</div>';
+      h+='<div class="cf"><div class="lbl">📋 格式 / 说明</div><div class="cod">'+item.format+'</div></div>';
+      h+='<div class="cp"><span class="u">¥</span>'+item.price+' <span style="font-size:14px;color:var(--sub)">≈ '+up+' USDT</span></div>';
+      h+='<div class="cw">'+(item.stock>0?'🟢 库存: '+item.stock:'🔴 售罄')+'</div>'+tg;
+      h+='<button class="btn-buy" data-item-id="'+item.id+'" '+(so?'disabled':'')+'>'+(so?'已售罄':'🛒 立即购买 (USDT)')+'</button></div>';
+    });
+    h+='</div>';
+  });
+  document.getElementById("products-area").innerHTML=h;
+  var ts=0;INVENTORY.forEach(function(i){ts+=(i.sold||0)});
+  document.getElementById("countSold").textContent=(ts||5678).toLocaleString()+"+";
+}
+
+document.addEventListener("click",function(e){var b=e.target.closest("[data-item-id]");if(b)buyItem(b.getAttribute("data-item-id"))});
+
+function buyItem(itemId){
+  var item=INVENTORY.find(function(i){return i.id===itemId});
+  if(!item||item.stock<=0)return;
+  var up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
+  if(!CONFIG.usdtAddress||CONFIG.usdtAddress==="YOUR_TRC20_ADDRESS_HERE"){alert("⚠️ 收款地址未配置，请联系客服 @FB520529");return;}
+  document.getElementById("modalItemName").textContent=item.name;
+  document.getElementById("modalAmount").textContent=up;
+  document.getElementById("modalCNY").textContent="≈ ¥"+item.price+" CNY";
+  document.getElementById("modalAddr").textContent=CONFIG.usdtAddress;
+  document.getElementById("modalStatus").innerHTML='<span class="sp"></span> 等待付款中...';
+  document.getElementById("modalStatus").className="sb2";
+  document.getElementById("modalAccount").style.display="none";
+  document.getElementById("buyModal").classList.add("ac");
+  if(pollTimer)clearInterval(pollTimer);
+  var st=new Date().toISOString(),ta=parseFloat(up);
+  window._buyItem=item;
+  pollTimer=setInterval(async function(){
+    try{
+      var u="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
+      var r=await fetch(u,{headers:{"Accept":"application/json"}});
+      var d=await r.json();
+      if(d.data){for(var i=0;i<d.data.length;i++){var am=Number(d.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
+        document.getElementById("modalStatus").innerHTML="✅ 付款已到账！";
+        document.getElementById("modalStatus").className="sb2 pd";
+        showAccount(window._buyItem,d.data[i].transaction_id);
+        return;}}}
+    }catch(e){}
+  },3000);
+}
+
+function showAccount(item,tx){
+  var h='<div class="accb"><div class="at">🎉 购买成功！</div><div class="ad2"><p>您的 <strong>'+item.name+'</strong> 订单已确认。</p><p>📋 请联系客服 <strong>@FB520529</strong> 获取账号</p><p style="word-break:break-all;font-size:12px;color:var(--sub)">TX: '+tx+'</p></div></div>';
+  document.getElementById("modalAccount").innerHTML=h;
+  document.getElementById("modalAccount").style.display="block";
+}
+
+function copyAddr(){
+  var a=document.getElementById("modalAddr").textContent;
+  navigator.clipboard.writeText(a).then(function(){
+    var e=document.getElementById("modalAddr");e.style.background="rgba(102,187,106,.3)";
+    setTimeout(function(){e.style.background="rgba(255,215,0,.1)"},1000);
+    document.getElementById("modalStatus").innerHTML="📋 地址已复制！请在钱包中粘贴付款";
+  });
+}
+
+function closeBuyModal(){document.getElementById("buyModal").classList.remove("ac");if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
+
+render();
+</script>
+</body>
+</html>
