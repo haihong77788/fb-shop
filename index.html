@@ -89,6 +89,24 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 .ft{text-align:center;padding:30px;color:var(--sub);font-size:12px;border-top:1px solid rgba(255,255,255,.04)}
 .ft .er{font-size:24px;letter-spacing:8px;margin-bottom:10px}
 @media(max-width:700px){.hero{padding:40px 16px 20px}.stats-bar{gap:30px}.cg{grid-template-columns:1fr}.ccs{flex-direction:column;align-items:center}.sb{right:-30px;top:-40px;font-size:11px;padding:8px 12px}.mascot{width:140px;height:140px}}
+
+.order-lookup-btn{display:inline-block;margin-top:16px;padding:10px 20px;background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.3);border-radius:12px;color:#ffd700;font-size:14px;cursor:pointer;text-align:center;transition:all .2s}
+.order-lookup-btn:hover{background:rgba(255,215,0,0.25);transform:translateY(-1px)}
+#lookupModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999;justify-content:center;align-items:center}
+#lookupModal.ac{display:flex}
+#lookupModal .modal{background:var(--card);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:30px;width:90%;max-width:440px;text-align:center}
+#lookupModal input{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;font-size:15px;margin:16px 0;text-align:center;font-family:monospace}
+#lookupModal input:focus{outline:none;border-color:#ffd700}
+#lookupModal .lookup-result{margin-top:16px;padding:16px;background:rgba(255,255,255,0.05);border-radius:12px;display:none;text-align:left;font-size:13px;line-height:1.8}
+#lookupModal .lookup-result.show{display:block}
+#lookupModal .lookup-result .lr-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+#lookupModal .lookup-result .lr-label{color:var(--sub)}
+#lookupModal .lookup-result .lr-val{color:#fff;font-weight:600}
+.lookup-status{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600}
+.lookup-status.pending{background:rgba(255,165,2,0.2);color:#ffa502}
+.lookup-status.paid{background:rgba(0,180,255,0.2);color:#00b4ff}
+.lookup-status.delivered{background:rgba(0,227,150,0.2);color:#00e396}
+#lookupLoading{display:none;margin:12px 0;color:var(--sub);font-size:13px}
 </style>
 </head>
 <body>
@@ -117,7 +135,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 <div class="ccs">
 <a class="cc tg" href="https://t.me/FB520529" target="_blank"><div class="cci"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="27" fill="#00aaff"/><path d="M12.5 27.5L24 32l4 12 6-18 8-16-24 14 8 3z" fill="white" opacity=".9"/></svg></div><div class="ccl">Telegram</div><div class="ccid">@FB520529</div></a>
 <a class="cc wx" href="weixin://dl/chat?FB5205209" target="_blank"><div class="cci"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="27" fill="#66bb6a"/><path d="M20 18c-4.4 0-8 3.3-8 7.3 0 2.4 1.3 4.6 3.3 5.8l-.8 2.7 3-1.5c.8.2 1.6.3 2.5.3.5 0 1 0 1.5-.1-.1-.5-.2-1-.2-1.5 0-3.8 3.3-6.8 7.5-6.8.4 0 .7 0 1.1.1C29.2 20.8 25 18 20 18z" fill="white"/><path d="M36 28.5c0-3.5-3.1-6.4-7-6.4s-7 2.9-7 6.4 3.1 6.4 7 6.4c.8 0 1.6-.1 2.4-.4l2.6 1.3-.7-2.5c1.5-1.2 2.7-2.9 2.7-4.8z" fill="white" opacity=".9"/></svg></div><div class="ccl">微信</div><div class="ccid">FB5205209</div></a>
-</div></section>
+</div><div style="text-align:center"><button class="order-lookup-btn" onclick="openLookup()">🔍 订单查询</button></div></section>
 <footer class="ft"><div class="er">🌟 🔥 💎 🚀 ⚡</div><p>FB 账号商城 © 2026 · 诚信经营 · 售后无忧</p></footer>
 </div>
 
@@ -220,6 +238,37 @@ function copyAddr(){
 
 function closeBuyModal(){document.getElementById("buyModal").classList.remove("ac");if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
 
+
+function openLookup(){document.getElementById("lookupModal").classList.add("ac");document.getElementById("lookupOrderId").focus()}
+async function checkOrder(){
+var id=document.getElementById("lookupOrderId").value.trim();
+if(!id)return;
+document.getElementById("lookupLoading").style.display="block";
+document.getElementById("lookupResult").classList.remove("show");
+document.getElementById("lookupErr").style.display="none";
+document.getElementById("lrAccRow").style.display="none";
+try{
+var r=await fetch("/api/check-order?id="+encodeURIComponent(id));
+if(!r.ok){document.getElementById("lookupErr").style.display="block";document.getElementById("lookupLoading").style.display="none";return}
+var d=await r.json();
+document.getElementById("lrId").textContent=id;
+document.getElementById("lrItem").textContent=d.itemName||"-";
+document.getElementById("lrAmount").textContent=(d.payAmount?d.payAmount+" USDT":"-");
+var st=d.status||"pending";
+var stMap={pending:"⏳ 待支付",paid:"💰 已支付",delivered:"✅ 已发货"};
+var stCls={pending:"pending",paid:"paid",delivered:"delivered"};
+document.getElementById("lrStatus").innerHTML="<span class=`lookup-status "+stCls[st]+"`>"+(stMap[st]||st)+"</span>";
+if(d.accountDelivered){
+document.getElementById("lrAccRow").style.display="flex";
+document.getElementById("lrAcc").innerHTML="<span style=`color:#00e396`>"+d.accountDelivered.uid+"</span>";
+if(d.accountDelivered.password)document.getElementById("lrAcc").innerHTML+=" / "+d.accountDelivered.password;
+}
+document.getElementById("lookupResult").classList.add("show");
+}catch(e){
+document.getElementById("lookupErr").style.display="block";
+}
+document.getElementById("lookupLoading").style.display="none";
+}
 render();
 </script>
 </body>
