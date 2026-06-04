@@ -6,3 +6,6 @@ data/
 api/
 admin.html
 *.bat
+
+oss-deploy.js
+*secret*
