@@ -191,7 +191,7 @@ function render(){
 
 document.addEventListener("click",function(e){var b=e.target.closest("[data-item-id]");if(b)buyItem(b.getAttribute("data-item-id"))});
 
-function buyItem(itemId){
+async function buyItem(itemId){
   var item=INVENTORY.find(function(i){return i.id===itemId});
   if(!item||item.stock<=0)return;
   var up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
@@ -203,26 +203,56 @@ function buyItem(itemId){
   document.getElementById("modalStatus").innerHTML='<span class="sp"></span> 等待付款中...';
   document.getElementById("modalStatus").className="sb2";
   document.getElementById("modalAccount").style.display="none";
+  document.getElementById("modalOrderId").textContent="-";
   document.getElementById("buyModal").classList.add("ac");
   if(pollTimer)clearInterval(pollTimer);
-  var st=new Date().toISOString(),ta=parseFloat(up);
-  window._buyItem=item;
-  pollTimer=setInterval(async function(){
-    try{
-      var u="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
-      var r=await fetch(u,{headers:{"Accept":"application/json"}});
-      var d=await r.json();
-      if(d.data){for(var i=0;i<d.data.length;i++){var am=Number(d.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
-        document.getElementById("modalStatus").innerHTML="✅ 付款已到账！";
-        document.getElementById("modalStatus").className="sb2 pd";
-        showAccount(window._buyItem,d.data[i].transaction_id);
-        return;}}}
-    }catch(e){}
-  },3000);
+  try{
+    var res=await fetch("/api/create-order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({itemId:itemId})});
+    var data=await res.json();
+    if(res.ok&&data.success&&data.order){
+      document.getElementById("modalOrderId").textContent=data.order.id;
+      up=(data.order.payAmount||parseFloat(up)).toFixed(2);
+      document.getElementById("modalAmount").textContent=up;
+      document.getElementById("modalAddr").textContent=data.order.usdtAddress||CONFIG.usdtAddress;
+      var st=new Date().toISOString(),ta=parseFloat(up);
+      window._buyItem=item;
+      window._orderId=data.order.id;
+      pollTimer=setInterval(async function(){
+        try{
+          var u="/api/check-order?id="+encodeURIComponent(window._orderId);
+          var r=await fetch(u);
+          var d=await r.json();
+          if(d&&d.status&&d.status!=="pending"){clearInterval(pollTimer);
+            document.getElementById("modalStatus").innerHTML=d.status==="delivered"?"✅ 已发货！":"✅ 付款已到账！";
+            document.getElementById("modalStatus").className="sb2 pd";
+            showAccount(window._buyItem,window._orderId,d.accountDelivered||null);
+            return;}
+          var u2="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
+          var r2=await fetch(u2,{headers:{"Accept":"application/json"}});
+          var d2=await r2.json();
+          if(d2.data){for(var i=0;i<d2.data.length;i++){var am=Number(d2.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
+            await fetch("/api/check-order?id="+encodeURIComponent(window._orderId));
+            document.getElementById("modalStatus").innerHTML="✅ 付款已到账！";
+            document.getElementById("modalStatus").className="sb2 pd";
+            showAccount(window._buyItem,window._orderId,null);
+            return;}}}
+        }catch(e){}
+      },3000);
+    }else{
+      document.getElementById("modalStatus").innerHTML="⚠️ 订单创建失败，请联系客服 @FB520529";
+      document.getElementById("modalStatus").className="sb2";
+    }
+  }catch(e){
+    document.getElementById("modalStatus").innerHTML="⚠️ 下单异常，请联系客服 @FB520529";
+    document.getElementById("modalStatus").className="sb2";
+  }
 }
 
-function showAccount(item,tx){
-  var h='<div class="accb"><div class="at">🎉 购买成功！</div><div class="ad2"><p>您的 <strong>'+item.name+'</strong> 订单已确认。</p><p>📋 请联系客服 <strong>@FB520529</strong> 获取账号</p><p style="word-break:break-all;font-size:12px;color:var(--sub)">TX: '+tx+'</p></div></div>';
+function showAccount(item,orderId,account){
+  var h='<div class="accb"><div class="at">🎉 购买成功！</div><div class="ad2"><p>您的 <strong>'+item.name+'</strong> 订单已确认。</p><p>📋 请联系客服 <strong>@FB520529</strong> 获取账号</p>';
+  h+='<p style="word-break:break-all;font-size:12px;color:var(--sub)">订单号: '+orderId+'</p>';
+  if(account&&account.uid){h+='<p style="word-break:break-all;font-size:12px;color:var(--sub)">账号: '+account.uid+(account.password?' / '+account.password:'')+'</p>';}
+  h+='</div></div>';
   document.getElementById("modalAccount").innerHTML=h;
   document.getElementById("modalAccount").style.display="block";
 }
