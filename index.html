@@ -196,6 +196,8 @@ async function buyItem(itemId){
   if(!item||item.stock<=0)return;
   var up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
   if(!CONFIG.usdtAddress||CONFIG.usdtAddress==="YOUR_TRC20_ADDRESS_HERE"){alert("⚠️ 收款地址未配置，请联系客服 @FB520529");return;}
+  // Generate local order ID
+  var orderId="ORD"+Date.now().toString(36).toUpperCase();
   document.getElementById("modalItemName").textContent=item.name;
   document.getElementById("modalAmount").textContent=up;
   document.getElementById("modalCNY").textContent="≈ ¥"+item.price+" CNY";
@@ -203,60 +205,52 @@ async function buyItem(itemId){
   document.getElementById("modalStatus").innerHTML='<span class="sp"></span> 等待付款中...';
   document.getElementById("modalStatus").className="sb2";
   document.getElementById("modalAccount").style.display="none";
-  document.getElementById("modalOrderId").textContent="-";
+  document.getElementById("modalOrderId").textContent=orderId;
   document.getElementById("buyModal").classList.add("ac");
   if(pollTimer)clearInterval(pollTimer);
-  try{
-    var res=await fetch("/api/create-order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({itemId:itemId})});
-    var data=await res.json();
-    if(res.ok&&data.success&&data.order){
-      document.getElementById("modalOrderId").textContent=data.order.id;
-      up=(data.order.payAmount||parseFloat(up)).toFixed(2);
-      document.getElementById("modalAmount").textContent=up;
-      document.getElementById("modalAddr").textContent=data.order.usdtAddress||CONFIG.usdtAddress;
-      var st=new Date().toISOString(),ta=parseFloat(up);
-      window._buyItem=item;
-      window._orderId=data.order.id;
-      pollTimer=setInterval(async function(){
-        try{
-          var u="/api/check-order?id="+encodeURIComponent(window._orderId);
-          var r=await fetch(u);
-          var d=await r.json();
-          if(d&&d.status&&d.status!=="pending"){clearInterval(pollTimer);
-            document.getElementById("modalStatus").innerHTML=d.status==="delivered"?"✅ 已发货！":"✅ 付款已到账！";
-            document.getElementById("modalStatus").className="sb2 pd";
-            showAccount(window._buyItem,window._orderId,d.accountDelivered||null);
-            return;}
-          var u2="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
-          var r2=await fetch(u2,{headers:{"Accept":"application/json"}});
-          var d2=await r2.json();
-          if(d2.data){for(var i=0;i<d2.data.length;i++){var am=Number(d2.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
-            await fetch("/api/check-order?id="+encodeURIComponent(window._orderId));
-            document.getElementById("modalStatus").innerHTML="✅ 付款已到账！";
-            document.getElementById("modalStatus").className="sb2 pd";
-            showAccount(window._buyItem,window._orderId,null);
-            return;}}}
-        }catch(e){}
-      },3000);
-    }else{
-      document.getElementById("modalStatus").innerHTML="⚠️ 订单创建失败，请联系客服 @FB520529";
-      document.getElementById("modalStatus").className="sb2";
-    }
-  }catch(e){
-    document.getElementById("modalStatus").innerHTML="⚠️ 下单异常，请联系客服 @FB520529";
-    document.getElementById("modalStatus").className="sb2";
-  }
+  // Save order to localStorage immediately
+  saveLocalOrder(orderId, item, up);
+  var st=new Date().toISOString(),ta=parseFloat(up);
+  window._buyItem=item;
+  window._orderId=orderId;
+  // Poll TronGrid for payment
+  pollTimer=setInterval(async function(){
+    try{
+      var u2="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
+      var r2=await fetch(u2,{headers:{"Accept":"application/json"}});
+      var d2=await r2.json();
+      if(d2.data){for(var i=0;i<d2.data.length;i++){var am=Number(d2.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
+        updateLocalOrder(orderId,"paid",d2.data[i].transaction_id);
+        document.getElementById("modalStatus").innerHTML="✅ 付款已到账！";
+        document.getElementById("modalStatus").className="sb2 pd";
+        showAccount(window._buyItem,orderId);
+        return;}}}
+    }catch(e){}
+  },3000);
 }
 
-function showAccount(item,orderId,account){
+function showAccount(item,orderId){
   var h='<div class="accb"><div class="at">🎉 购买成功！</div><div class="ad2"><p>您的 <strong>'+item.name+'</strong> 订单已确认。</p><p>📋 请联系客服 <strong>@FB520529</strong> 获取账号</p>';
-  h+='<p style="word-break:break-all;font-size:12px;color:var(--sub)">订单号: '+orderId+'</p>';
-  if(account&&account.uid){h+='<p style="word-break:break-all;font-size:12px;color:var(--sub)">账号: '+account.uid+(account.password?' / '+account.password:'')+'</p>';}
+  h+='<p style="word-break:break-all;font-size:12px;color:#ffd740">📦 订单号: '+orderId+'（请截图保存）</p>';
   h+='</div></div>';
   document.getElementById("modalAccount").innerHTML=h;
   document.getElementById("modalAccount").style.display="block";
 }
 
+
+// ===== LOCAL ORDER STORAGE =====
+function getLocalOrders(){
+  try{return JSON.parse(localStorage.getItem("fb_orders")||"{}")}catch(e){return{}}
+}
+function saveLocalOrder(orderId,item,usdtAmount){
+  var orders=getLocalOrders();
+  orders[orderId]={id:orderId,itemName:item.name,itemCategory:item.category,price:item.price,usdtAmount:usdtAmount,status:"pending",createdAt:new Date().toISOString()};
+  localStorage.setItem("fb_orders",JSON.stringify(orders));
+}
+function updateLocalOrder(orderId,status,txHash){
+  var orders=getLocalOrders();
+  if(orders[orderId]){orders[orderId].status=status;orders[orderId].txHash=txHash||"";orders[orderId].paidAt=new Date().toISOString();localStorage.setItem("fb_orders",JSON.stringify(orders))}
+}
 function copyAddr(){
   var a=document.getElementById("modalAddr").textContent;
   navigator.clipboard.writeText(a).then(function(){
