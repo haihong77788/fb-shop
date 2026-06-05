@@ -139,6 +139,24 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 <footer class="ft"><div class="er">🌟 🔥 💎 🚀 ⚡</div><p>FB 账号商城 © 2026 · 诚信经营 · 售后无忧</p></footer>
 </div>
 
+
+<div id="lookupModal"><div class="modal">
+<h3 style="color:#ffd700;margin-bottom:4px">🔍 订单查询</h3>
+<p style="color:var(--sub);font-size:13px;margin-bottom:8px">输入你的订单号查看状态</p>
+<input type="text" id="lookupOrderId" placeholder="订单号 如: ORDMQ088Y4J" onkeydown="if(event.key==='Enter')checkOrder()">
+<p id="lookupLoading">⏳ 查询中...</p>
+<div class="lookup-result" id="lookupResult">
+<div class="lr-row"><span class="lr-label">订单号</span><span class="lr-val" id="lrId">-</span></div>
+<div class="lr-row"><span class="lr-label">商品</span><span class="lr-val" id="lrItem">-</span></div>
+<div class="lr-row"><span class="lr-label">金额</span><span class="lr-val" id="lrAmount">-</span></div>
+<div class="lr-row"><span class="lr-label">状态</span><span class="lr-val" id="lrStatus">-</span></div>
+</div>
+<p id="lookupErr" style="color:var(--red);font-size:13px;margin-top:10px;display:none">未找到该订单</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:16px">
+<button class="bc" onclick="checkOrder()">查询</button>
+<button class="bc" style="background:rgba(255,255,255,0.05);color:var(--sub)" onclick="document.getElementById('lookupModal').classList.remove('ac')">关闭</button>
+</div>
+</div></div>
 <div class="mo" id="buyModal">
 <div class="md">
 <h3>💳 USDT 付款</h3>
