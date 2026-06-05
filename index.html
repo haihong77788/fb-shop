@@ -171,26 +171,26 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 <script>
 (function(){var s=document.getElementById("stars"),c=80,h="";for(var i=0;i<c;i++){var z=Math.random()*3+1,x=Math.random()*100,y=Math.random()*100,d=Math.random()*3+2,dl=Math.random()*5;h+='<div class="star" style="width:'+z+'px;height:'+z+'px;top:'+y+'%;left:'+x+'%;--dur:'+d+'s;--delay:'+dl+'s;"></div>'}s.innerHTML=h})();
 
-// EMBEDDED DATA
 var INVENTORY = [{"id":"1","category":"个号","name":"三解","price":50,"format":"6155 - 6156 - 6157","desc":"带身份证信息，普通三解账号","warranty":"包售后7天内一次","tags":["热卖"],"stock":10,"sold":5000},{"id":"2","category":"个号","name":"带身份证 · 抵抗三解","price":180,"format":"10001 - 10009（国家随机）","desc":"带身份证信息，抵抗三解高防账号","warranty":"包售后7天内一次","tags":["推荐"],"stock":8,"sold":3409},{"id":"3","category":"粉丝页","name":"老主页","price":40,"format":"经典老主页","desc":"包接入活。修改资料造成的死亡则不做售后","warranty":"包接入活","tags":["实惠"],"stock":20,"sold":1023},{"id":"4","category":"粉丝页","name":"千粉主页","price":80,"format":"1000+ 真实粉丝","desc":"拥有 1000+ 粉丝的粉丝页，包接入活","warranty":"包接入活","tags":["热门"],"stock":12,"sold":613},{"id":"5","category":"粉丝页","name":"万粉主页","price":240,"format":"10,000+ 真实粉丝","desc":"拥有 10000+ 粉丝的高权重粉丝页","warranty":"包接入活","tags":["旗舰"],"stock":5,"sold":255},{"id":"6","category":"BM","name":"老 BM","price":30,"format":"稳定老号","desc":"经典老BM号，稳定可靠","warranty":"稳定可靠","tags":["入门"],"stock":25,"sold":1278},{"id":"7","category":"BM","name":"分享像素 BM","price":160,"format":"支持像素分享","desc":"支持分享像素的BM号，适合广告投放","warranty":"功能齐全","tags":["实用"],"stock":10,"sold":511},{"id":"8","category":"BM","name":"50 主页 BM","price":80,"format":"支持50主页管理","desc":"可管理50个主页的BM号","warranty":"容量充足","tags":["进阶"],"stock":10,"sold":511},{"id":"9","category":"BM","name":"100 主页 BM","price":140,"format":"支持100主页管理","desc":"可管理100个主页的BM号","warranty":"大容量旗舰","tags":["旗舰"],"stock":0,"sold":311}];
 var CONFIG = {"usdtAddress":"TGoptTMytquxHW5gYsQgKxb1q6Ch2P7Z1r","usdtRate":6.78,"minConfirmations":1};
-
 var pollTimer=null;
 
 var catCfg={"个号":{ic:"👤",ln:"lp",tb:"rgba(255,107,157,.2)",tc:"#ff6b9d",grad:"linear-gradient(90deg,#ff6b9d,#ff3d6f)",glow:"rgba(255,107,157,.25)"},"粉丝页":{ic:"📄",ln:"lv",tb:"rgba(162,155,254,.2)",tc:"#a29bfe",grad:"linear-gradient(90deg,#a29bfe,#6c5ce7)",glow:"rgba(108,92,231,.25)"},"BM":{ic:"🏢",ln:"lc",tb:"rgba(0,229,255,.2)",tc:"#00e5ff",grad:"linear-gradient(90deg,#00e5ff,#00b8d4)",glow:"rgba(0,229,255,.2)"}};
 
 function render(){
-  var g={},o=["个号","粉丝页","BM"];
+  var g={},order=["个号","粉丝页","BM"];
   INVENTORY.forEach(function(i){if(!g[i.category])g[i.category]=[];g[i.category].push(i)});
-  var ks=Object.keys(g).sort(function(a,b){return o.indexOf(a)-o.indexOf(b)});
+  var ks=Object.keys(g).sort(function(a,b){return order.indexOf(a)-order.indexOf(b)});
   var h="";
   ks.forEach(function(cat){
     var cf=catCfg[cat]||catCfg["个号"];
     h+='<div class="st"><div class="ic">'+cf.ic+'</div><h2>Facebook '+cat+'</h2><div class="ln '+cf.ln+'"></div></div><div class="cg">';
-      var gd=cf.grad;if(item.tags&&(item.tags.indexOf("推荐")>=0||item.tags.indexOf("旗舰")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
-      var gd=cf.grad;if(item.tags&&(item.tags.indexOf("鎺ㄨ崘")>=0||item.tags.indexOf("鏃楄埌")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
+    g[cat].forEach(function(item){
+      var gd=cf.grad;
+      if(item.tags&&(item.tags.indexOf("推荐")>=0||item.tags.indexOf("旗舰")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
       var so=item.stock<=0,up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
-      var tg="";if(item.tags&&item.tags.length)tg='<div class="ctg">'+item.tags.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>';
+      var tg="";
+      if(item.tags&&item.tags.length)tg='<div class="ctg">'+item.tags.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>';
       h+='<div class="cd'+(so?' cd-out':'')+'" style="--grad:'+gd+';--glow:'+cf.glow+'">';
       h+='<div class="ch"><div class="cn">'+item.name+'</div>';
       if(item.tags&&item.tags.length)h+='<span class="ct" style="background:'+cf.tb+';color:'+cf.tc+';">'+item.tags[0]+'</span>';
@@ -202,7 +202,7 @@ function render(){
     });
     h+='</div>';
   });
-  document.getElementById("products-area").innerHTML=h;
+  document.getElementById("products-area").innerHTML=h||'<div style="text-align:center;color:var(--sub);padding:40px">没有找到匹配的商品</div>';
   var ts=0;INVENTORY.forEach(function(i){ts+=(i.sold||0)});
   document.getElementById("countSold").textContent=(ts||5678).toLocaleString()+"+";
 }
@@ -213,19 +213,14 @@ function buyItem(itemId){
   var item=INVENTORY.find(function(i){return i.id===itemId});
   if(!item||item.stock<=0)return;
   var up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
-  if(!CONFIG.usdtAddress||CONFIG.usdtAddress==="YOUR_TRC20_ADDRESS_HERE"){alert("鈿狅笍 鏀舵鍦板潃鏈厤缃紝璇疯仈绯诲鏈?@FB520529");return;}
-  var orderId="ORD"+Date.now().toString(36).toUpperCase();
-  document.getElementById("modalItemName").textContent=item.name;
+  var orderId="FB-"+Date.now().toString(36).toUpperCase()+"-"+Math.random().toString(36).substr(2,4).toUpperCase();
   document.getElementById("modalAmount").textContent=up;
-  document.getElementById("modalCNY").textContent="鈮?¥"+item.price+" CNY";
-  document.getElementById("modalAddr").textContent=CONFIG.usdtAddress;
-  document.getElementById("modalStatus").innerHTML='<span class="sp"></span> 绛夊緟浠樻涓?..';
-  document.getElementById("modalStatus").className="sb2";
+  document.getElementById("modalStatus").innerHTML="等待支付中...";
+  document.getElementById("modalStatus").className="status-msg waiting";
   document.getElementById("modalAccount").style.display="none";
   document.getElementById("modalOrderId").textContent=orderId;
   document.getElementById("buyModal").classList.add("ac");
   if(pollTimer)clearInterval(pollTimer);
-  saveLocalOrder(orderId,item,up);
   window._buyItem=item;
   window._orderId=orderId;
   var st=new Date().toISOString(),ta=parseFloat(up);
@@ -234,85 +229,69 @@ function buyItem(itemId){
       var u="https://api.trongrid.io/v1/accounts/"+CONFIG.usdtAddress+"/transactions/trc20?contract_address=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t&only_confirmed=true&limit=20&min_timestamp="+Math.floor(new Date(st).getTime()/1000);
       var r=await fetch(u,{headers:{"Accept":"application/json"}});
       var d=await r.json();
-      if(d.data){for(var i=0;i<d.data.length;i++){var am=Number(d.data[i].value)/1e6;if(Math.abs(am-ta)/ta<.03){clearInterval(pollTimer);
-        updateLocalOrder(orderId,"paid",d.data[i].transaction_id);
-        document.getElementById("modalStatus").innerHTML="鉁?浠樻宸插埌璐︼紒";
-        document.getElementById("modalStatus").className="sb2 pd";
+      if(d.data){for(var i=0;i<d.data.length;i++){var am=Number(d.data[i].value)/1e6;if(Math.abs(am-ta)/ta<0.03){clearInterval(pollTimer);
+        document.getElementById("modalStatus").innerHTML="付款已到账！";
+        document.getElementById("modalStatus").className="status-msg paid";
         showAccount(window._buyItem,orderId);
-        return;}}}
+        item.stock--;item.sold++;render();return;}}}
     }catch(e){}
   },3000);
 }
 
-
-
 function showAccount(item,orderId){
-  var h='<div class="accb"><div class="at">馃帀 璐拱鎴愬姛锛?/div><div class="ad2"><p>鎮ㄧ殑 <strong>'+item.name+'</strong> 璁㈠崟宸茬‘璁ゃ€?/p><p>📦 璇疯仈绯诲鏈?<strong>@FB520529</strong> 鑾峰彇璐﹀彿</p>';
-  h+='<p style="word-break:break-all;font-size:12px;color:#ffd740">馃摝 璁㈠崟鍙? '+orderId+'锛堣鎴浘淇濆瓨锛?/p>';
-  h+='</div></div>';
+  var h='<div class="accb"><div class="at">购买成功！</div><div class="ad2"><p>您的 <strong>'+item.name+'</strong> 订单已确认。</p><p>请联系客服 <strong>@FB520529</strong> 获取账号</p><p style="word-break:break-all;font-size:12px;color:#ffd740">订单号: '+orderId+'（请截图保存）</p></div></div>';
   document.getElementById("modalAccount").innerHTML=h;
   document.getElementById("modalAccount").style.display="block";
 }
 
-
-// ===== LOCAL ORDER STORAGE =====
-function getLocalOrders(){
-  try{return JSON.parse(localStorage.getItem("fb_orders")||"{}")}catch(e){return{}}
-}
-function saveLocalOrder(orderId,item,usdtAmount){
-  var orders=getLocalOrders();
-  orders[orderId]={id:orderId,itemName:item.name,itemCategory:item.category,price:item.price,usdtAmount:usdtAmount,status:"pending",createdAt:new Date().toISOString()};
-  localStorage.setItem("fb_orders",JSON.stringify(orders));
-}
-function updateLocalOrder(orderId,status,txHash){
-  var orders=getLocalOrders();
-  if(orders[orderId]){orders[orderId].status=status;orders[orderId].txHash=txHash||"";orders[orderId].paidAt=new Date().toISOString();localStorage.setItem("fb_orders",JSON.stringify(orders))}
-}
-function copyVal(v){navigator.clipboard.writeText(v).then(()=>alert('已复制：'+v))}
 function copyAddr(){
   var a=document.getElementById("modalAddr").textContent;
   navigator.clipboard.writeText(a).then(function(){
-    var e=document.getElementById("modalAddr");e.style.background="rgba(102,187,106,.3)";
-    setTimeout(function(){e.style.background="rgba(255,215,0,.1)"},1000);
-    document.getElementById("modalStatus").innerHTML="📦 鍦板潃宸插鍒讹紒璇峰湪閽卞寘涓矘璐翠粯娆?;
+    document.getElementById("modalStatus").innerHTML="地址已复制！请在钱包中粘贴付款";
+    showToast("USDT地址已复制");
   });
 }
 
 function closeBuyModal(){document.getElementById("buyModal").classList.remove("ac");if(pollTimer){clearInterval(pollTimer);pollTimer=null}}
 
+function getLocalOrders(){try{return JSON.parse(localStorage.getItem("fb_orders")||"{}")}catch(e){return{}}}
+function saveLocalOrder(orderId,item,usdtAmount){
+  var o=getLocalOrders();
+  o[orderId]={id:orderId,itemName:item.name,itemCategory:item.category,price:item.price,usdtAmount:usdtAmount,status:"pending",createdAt:new Date().toISOString()};
+  localStorage.setItem("fb_orders",JSON.stringify(o));
+}
+
+function checkOrderLocal(){
+  var id=document.getElementById("lookupOrderId").value.trim();
+  if(!id)return;
+  document.getElementById("lookupLoading").style.display="block";
+  document.getElementById("lookupResult").classList.remove("show");
+  document.getElementById("lookupErr").style.display="none";
+  setTimeout(function(){
+    var orders=getLocalOrders();
+    var order=orders[id];
+    document.getElementById("lookupLoading").style.display="none";
+    if(order){
+      document.getElementById("lrId").textContent=id;
+      document.getElementById("lrItem").textContent=order.itemName||"-";
+      document.getElementById("lrAmount").textContent=(order.usdtAmount?order.usdtAmount+" USDT":"-");
+      var stMap={pending:"待支付",paid:"已支付",delivered:"已发货"};
+      document.getElementById("lrStatus").textContent=stMap[order.status]||order.status;
+      document.getElementById("lookupResult").classList.add("show");
+    }else{
+      document.getElementById("lookupErr").style.display="block";
+    }
+  },300);
+}
 
 function openLookup(){document.getElementById("lookupModal").classList.add("ac");document.getElementById("lookupOrderId").focus()}
-async function checkOrder(){
-var id=document.getElementById("lookupOrderId").value.trim();
-if(!id)return;
-document.getElementById("lookupLoading").style.display="block";
-document.getElementById("lookupResult").classList.remove("show");
-document.getElementById("lookupErr").style.display="none";
-document.getElementById("lrAccRow").style.display="none";
-try{
-var r=await fetch("/api/check-order?id="+encodeURIComponent(id));
-if(!r.ok){document.getElementById("lookupErr").style.display="block";document.getElementById("lookupLoading").style.display="none";return}
-var d=await r.json();
-document.getElementById("lrId").textContent=id;
-document.getElementById("lrItem").textContent=d.itemName||"-";
-document.getElementById("lrAmount").textContent=(d.payAmount?d.payAmount+" USDT":"-");
-var st=d.status||"pending";
-var stMap={pending:"鈴?寰呮敮浠?,paid:"馃挵 宸叉敮浠?,delivered:"鉁?宸插彂璐?};
-var stCls={pending:"pending",paid:"paid",delivered:"delivered"};
-document.getElementById("lrStatus").innerHTML="<span class=`lookup-status "+stCls[st]+"`>"+(stMap[st]||st)+"</span>";
-if(d.accountDelivered){
-document.getElementById("lrAccRow").style.display="flex";
-document.getElementById("lrAcc").innerHTML="<span style=`color:#00e396`>"+d.accountDelivered.uid+"</span>";
-if(d.accountDelivered.password)document.getElementById("lrAcc").innerHTML+=" / "+d.accountDelivered.password;
-}
-document.getElementById("lookupResult").classList.add("show");
-}catch(e){
-document.getElementById("lookupErr").style.display="block";
-}
-document.getElementById("lookupLoading").style.display="none";
-}
+function closeLookup(){document.getElementById("lookupModal").classList.remove("ac")}
+
+function copyVal(v){navigator.clipboard.writeText(v).then(function(){showToast("已复制: "+v)})}
+function showToast(msg){var c=document.getElementById("toastContainer");var d=document.createElement("div");d.className="toast";d.textContent=msg;c.appendChild(d);setTimeout(function(){d.remove()},2000)}
+
 render();
-</script>
+</script></script>
 </body>
 </html>
 
