@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FB璐﹀彿鍟嗗煄 - 鍏ㄧ悆Facebook璐﹀彿渚涘簲</title>
+<title>FB账号商城 - 全球Facebook账号供应</title>
 <style>
 :root{--bg:#0a0a1a;--card-bg:#12122a;--pink:#ff6b9d;--purple:#c44dff;--cyan:#00e5ff;--gold:#ffd700;--text:#e8e8f0;--sub:#8888aa;--green:#66bb6a}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -117,7 +117,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 <div class="container">
 <header class="hero">
 <div class="hero-badge">馃敟 FB ACCOUNT STORE</div>
-<h1>Facebook 璐﹀彿鍟嗗煄</h1>
+<h1>Facebook 账号商城</h1>
   <p class="subtitle">稳定 · 可靠 · 售后无忧</p>
 <div class="mascot-wrap"><div class="mascot">
 <div class="sb">浣犲ソ锛侀€夊彿鍚梸 馃槉</div>
@@ -187,7 +187,7 @@ function render(){
   ks.forEach(function(cat){
     var cf=catCfg[cat]||catCfg["个号"];
     h+='<div class="st"><div class="ic">'+cf.ic+'</div><h2>Facebook '+cat+'</h2><div class="ln '+cf.ln+'"></div></div><div class="cg">';
-    g[cat].forEach(function(item){
+      var gd=cf.grad;if(item.tags&&(item.tags.indexOf("推荐")>=0||item.tags.indexOf("旗舰")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
       var gd=cf.grad;if(item.tags&&(item.tags.indexOf("鎺ㄨ崘")>=0||item.tags.indexOf("鏃楄埌")>=0))gd="linear-gradient(90deg,#c44dff,#ff6b9d)";
       var so=item.stock<=0,up=(item.price/(CONFIG.usdtRate||7.2)).toFixed(2);
       var tg="";if(item.tags&&item.tags.length)tg='<div class="ctg">'+item.tags.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>';
