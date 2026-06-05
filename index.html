@@ -91,13 +91,6 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang SC'
 @media(max-width:700px){.hero{padding:40px 16px 20px}.stats-bar{gap:30px}.cg{grid-template-columns:1fr}.ccs{flex-direction:column;align-items:center}.sb{right:-30px;top:-40px;font-size:11px;padding:8px 12px}.mascot{width:140px;height:140px}}
 
 .order-lookup-btn{display:inline-block;margin-top:16px;padding:10px 20px;background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.3);border-radius:12px;color:#ffd700;font-size:14px;cursor:pointer;text-align:center;transition:all .2s}
-.order-lookup-btn:hover{background:rgba(255,215,0,0.25);transform:translateY(-1px)}
-#lookupModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999;justify-content:center;align-items:center}
-#lookupModal.ac{display:flex}
-#lookupModal .modal{background:var(--card);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:30px;width:90%;max-width:440px;text-align:center}
-#lookupModal input{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;font-size:15px;margin:16px 0;text-align:center;font-family:monospace}
-#lookupModal input:focus{outline:none;border-color:#ffd700}
-#lookupModal .lookup-result{margin-top:16px;padding:16px;background:rgba(255,255,255,0.05);border-radius:12px;display:none;text-align:left;font-size:13px;line-height:1.8}
 #lookupModal .lookup-result.show{display:block}
 #lookupModal .lookup-result .lr-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 #lookupModal .lookup-result .lr-label{color:var(--sub)}
@@ -290,6 +283,7 @@ function closeLookup(){document.getElementById("lookupModal").classList.remove("
 function copyVal(v){navigator.clipboard.writeText(v).then(function(){showToast("已复制: "+v)})}
 function showToast(msg){var c=document.getElementById("toastContainer");var d=document.createElement("div");d.className="toast";d.textContent=msg;c.appendChild(d);setTimeout(function(){d.remove()},2000)}
 
+function checkOrder(){return checkOrderLocal()}
 render();
 </script></script>
 </body>
